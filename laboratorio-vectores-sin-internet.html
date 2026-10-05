@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="es" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Laboratorio de vectores — Marcos Guerrero Zambrano</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled="true"]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed="true"],
+  [aria-selected="true"],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type="file"]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type="color"] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="time"],
+    [type="week"]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html>body{padding:20px;max-width:980px;margin:0 auto;font-family:system-ui,sans-serif}</style>
+</head>
+<body>
+<div id="vector-lab">
+  <header class="vl-header"><h2>Laboratorio de vectores</h2><span class="vl-license"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAAfCAMAAABUFvrSAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjnz7UZMAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAblQTFRFAAAAAAAA////////////8fHx7+/v4+Pj39/f1tXV09bS0tXS0tXR0dTR0dTQ0NTQ0NPPz9PPztLOztHNzdHNzdHMz8/PzdDMzNDMzNDLzM/Ly8/Ly8/Ky87Kys3Jyc3Jyc3IyMzIyMzHx8vHxsrGxsrFxcnFyMfHxcnExMnExMjDw8jDxMfDw8fCwsfCwcXAwMXAwMW/wMS/v8S+v8O+vsO+vsK9vcK9vcK8v7+/vMG8vMG7vMC8u8C7u8C6ur+6ur+5ub65ub64uL23t7y2urm5tru1tbq0tLqztLmzs7iysrixsrexsbewsbawsLavsLWvr7Wur7SusLOvrrStrrOtr7KvrbOsrLKrr6+vq7GqrKurn6OenqCdn5+fnp2dmpiZlpmWk5iTkZSRkZORkY+Pj4+PiYyJjIqLh4aHhIaEhIWEgoWChIGCgICAfX98fH98fnt8eXx5eHV2dnN0dXJzcHJvcHBwaGVmYGBgXV5dWldYUFFQUFBQQ0RDQEBAPj8+Pzs8NTY1MjMxMjExMDAwMS0uKSkpKCkoKCUmIx8gICAgHxscGxsbGRkZEBAQDg4ODQ4NDQwN8PP1VAAAAAR0Uk5T/wAKDnDBpeYAAANiSURBVHjavZWNV9JQGMbfaiGirSVmgExptlKUyM8kzPzKbzNNUzOtFLO0yIwkVJxWCEE68S/uvWPjKkPPEY89wLnnPGM/Xp5733dwBS5El/DT09XhbXRXi0I5b7NYbPYyQXS6G7ztXT39Q8/HJiYmX51doHDbmutcosNu5tgCk6ngGmcudYiu2uY2Qh4Zm5jMkYzcB84K3swubyUBldxaYovsQpX7IZIHhkfGtZJXo4CKrtK7T/HR6UCuYOV8e5DW3jxncVS6m9u7+gaH1ZLnYgBSMCgBxObo/Xqfgr11TsHCbgKAHPJ7PP6QDACbNTcdVbXejm4MQyn59QGEjQzKGIYDStD7FNzoqrASruw3MCnNIjpWYxFcDa2dPVgyAccghFcAyGWIUUDKX9hI+xTsFnkOuREjk5YhgjVzdtHdjCU/G8UsViGcr4GZMKym84Xfb5G7fxjIU30Krr5t9iFXLZeS54sczvrWrt7BkfHJySgc+V0jRLX7o/AnvvMD/B9hWvUpWLSzeyCXMMdkkGGPLRXdjzp6BkgWIBE3BBAiqwTp+6Xv3+LxeCAvX/MpWCheBvAzGZoFWDILrqY2zIKAg8QEFFmDFIz+vQDagXzVp+DyG1sgYxCesCT5U8t7/JIMW1wZyaJvaPRUMCovsBuPbzzNAPNsEkIIBCJpSllC5G8nr9krax939g6NnBIF8a++YfLjqJ3jUdgKAbDECCSMnsRsBI/HVGJWyaLAJrq9eOAQrG4egG7z0N+I7+5CYPrr3+ObZzUBeBhGzVldlH9gstzRwHjcmOzHDf28z/uHC1epfxbw0QYJ6hvkwwb1s0RhKEn4MQqyZEZx5pamm6fumrqQ30+yfHrzkBADiISCkcwhpPfpcdsEmUkftylJWZgEHrdyZ/2T1HHLZWwKxT7MInuD3G9q7+4nnZfLoL+rtLTx5JbOFYxDaCbbEPKZHdUN2HhkCOUEhhWeW0dyCeUalbHJf4Jzas12/eigN/hlgJ+sdQXOrS+W6+sZjyb21js4rlR/gPKh0iy8nJVs42aOPkx9nJVyKUB5M5m+5mYlr+Hj36c9/udZM6/PQRubOl99naBfL+3FN9hCk6mQ5cylL7ZBJxqE3ifgE9nbiy28zWq18S2LBHuGijX4f9Lli8Fe+gfG6MwbUefR7wAAAABJRU5ErkJggg==" width="88" height="31" alt="Creative Commons CC BY-NC"><span>CC BY-NC 4.0<br>Marcos Guerrero Zambrano</span></span></header>
+
+  <div style="margin:12px 0"><button id="vl-help-button" class="btn" type="button" aria-expanded="false" aria-controls="vl-help">Cómo usar el simulador</button></div>
+  <section id="vl-help" hidden aria-labelledby="vl-help-title">
+    <h3 id="vl-help-title">Instrucciones de funcionamiento</h3>
+    <p id="vl-help-current" aria-live="polite"></p>
+    <details open><summary>Primeros pasos y barras deslizantes</summary>
+      <ol><li>Selecciona una pestaña de método. Los controles disponibles cambian según el método.</li><li>Escoge la operación. Baja hasta los controles de cada vector y ajusta su magnitud y su ángulo. Puedes arrastrar las barras o usar las flechas del teclado al enfocarlas. La magnitud cambia en pasos de 0,1 u y el ángulo en pasos de 1°.</li><li>Mantén fija una variable mientras cambias otra. Observa cómo se modifican las flechas y la resultante.</li><li>Debajo del gráfico lee la magnitud y dirección de la resultante. Registra los valores antes de cambiar de ensayo: el simulador no guarda un historial.</li></ol>
+      <p>Las letras con flecha representan vectores. Una letra sin flecha después de «Magnitud» representa un número. Todos los vectores deben corresponder a la misma cantidad física y unidad.</p>
+    </details>
+    <details><summary>Paralelogramo para sumar o restar dos vectores</summary>
+      <ol><li>Elige «Paralelogramo» y después «Suma» o «Resta».</li><li>Ajusta los vectores A y B en los controles inferiores.</li><li>En la suma, las dos flechas nacen del mismo punto; las paralelas completan la figura y la diagonal es la resultante R.</li><li>En la resta se construye A + (−B): el vector B se invierte. La flecha discontinua «B original» sirve de referencia.</li><li>Compara suma y resta sin cambiar las barras. Describe qué cambia en la magnitud y dirección de R.</li></ol>
+    </details>
+    <details><summary>Triángulo para restar dos vectores</summary>
+      <ol><li>Selecciona «Triángulo». La única operación es A − B.</li><li>Ajusta A y B. La flecha R comienza en la punta de B y termina en la punta de A.</li><li>Compara el resultado con la resta por paralelogramo usando los mismos valores. La posición de la flecha puede cambiar; su magnitud y dirección deben coincidir.</li></ol>
+    </details>
+    <details><summary>Polígono con dos tres o cuatro vectores</summary>
+      <ol><li>Selecciona «Polígono» y el número de vectores. Al cambiar el número, la operación vuelve a la suma simple.</li><li>En «Operación» escoge una suma o una combinación de sumas y restas. Ajusta cada vector que aparece abajo.</li><li>Lee la expresión de izquierda a derecha: cada cola se coloca en la punta anterior. Los términos negativos tienen sentido contrario al vector original.</li><li>R une el inicio del recorrido con su final. Si el recorrido se cierra, su magnitud es cero y no tiene dirección definida.</li></ol>
+    </details>
+    <details><summary>Multiplicación por un escalar</summary>
+      <ol><li>En «Polígono», escoge una operación que contenga k.</li><li>Elige el vector que se multiplicará por k y mueve la barra del escalar entre −3 y 3.</li><li>Compara k = 1, k = 2, k = −1 y k = 0 dejando fijos los vectores originales.</li><li>El valor absoluto de k multiplica la magnitud. Un k negativo invierte el sentido. Un k nulo elimina la contribución de ese término.</li><li>Si la operación también resta ese término, combina ambos signos. Por ejemplo, restar un vector multiplicado por −1 equivale a sumarlo.</li></ol>
+    </details>
+    <details><summary>Propiedad conmutativa y propiedad asociativa</summary>
+      <p>Estas opciones aparecen solo en una suma simple del polígono, sin k ni restas.</p>
+      <ol><li>Para la conmutativa, escoge «Demostrar propiedad» → «Conmutativa» y cambia el «Orden de suma». Las barras deben permanecer fijas. El recorrido discontinuo muestra el orden original para comparar.</li><li>Para la asociativa, selecciona tres o cuatro vectores, luego «Asociativa». Cambia «Agrupar primero»: la flecha S representa la suma del par entre paréntesis.</li><li>Registra qué cambia en el recorrido o en S y qué permanece igual en R. Con dos vectores no se puede comparar la asociación de sumas sucesivas.</li></ol>
+    </details>
+    <details><summary>Ángulos magnitudes y lectura del gráfico</summary>
+      <ol><li>En «Medir dirección desde +x» elige antihorario (positivo) u horario (negativo). El cambio convierte la lectura, sin girar el vector.</li><li>En «Señalar ángulo» selecciona R o un vector original. El arco con flecha indica el giro desde +x. En el triángulo, la referencia de R es paralela a +x y parte de la punta de B.</li><li>Si eliges un vector original en una operación con signo negativo o escalar, el arco corresponde al vector original. Lee por separado la operación aplicada.</li><li>El gráfico ajusta automáticamente su escala. Compara las magnitudes numéricas y la cuadrícula; no compares longitudes en la pantalla entre ensayos con escalas distintas.</li><li>Una magnitud igual a cero no tiene dirección definida. Los resultados se muestran redondeados a dos decimales.</li></ol>
+    </details>
+    <details><summary>Cómo investigar con el simulador</summary><ol><li>Escribe una pregunta que puedas probar.</li><li>Predice el resultado antes de mover las barras.</li><li>Elige qué variable cambiar y cuáles mantener constantes.</li><li>Realiza al menos tres ensayos y anota la configuración completa y el resultado.</li><li>Compara los datos con tu predicción. Explica tu conclusión usando dos ensayos concretos y busca un caso que pueda contradecirla.</li></ol></details>
+  </section>
+
+  <div class="nav nav-pills" role="tablist" aria-label="Método gráfico">
+    <button class="nav-link active" type="button" role="tab" id="vl-par" aria-controls="vl-panel" aria-selected="true" data-mode="par">Paralelogramo</button>
+    <button class="nav-link" type="button" role="tab" id="vl-tri" aria-controls="vl-panel" aria-selected="false" data-mode="tri">Triángulo</button>
+    <button class="nav-link" type="button" role="tab" id="vl-pol" aria-controls="vl-panel" aria-selected="false" data-mode="pol">Polígono</button>
+  </div>
+  <section id="vl-panel" role="tabpanel" aria-labelledby="vl-par">
+    <div class="viz-controls vl-options" id="vl-options"></div>
+    <div class="viz-controls vl-options">
+      <label class="form-label">Medir dirección desde +x<select class="form-select" id="vl-direction"><option value="ccw">Antihorario · ángulo positivo</option><option value="cw">Horario · ángulo negativo</option></select></label>
+      <label class="form-label">Señalar ángulo<select class="form-select" id="vl-target"></select></label>
+    </div>
+    <p id="vl-guide"></p>
+    <div id="vl-plot"><svg class="vl-svg" role="img" aria-label="Construcción gráfica de vectores y resultante"></svg></div>
+    <div id="vl-angle-reading" class="text-small"></div>
+    <div id="vl-result" class="tabular-nums" aria-live="polite"></div>
+    <div id="vl-proof" class="text-small"></div>
+    <hr>
+    <div id="vl-controls"></div>
+    <p class="text-small">Dirección desde +x: 0° a la derecha; +90° arriba; −90° abajo. Cambiar la convención convierte el ángulo y conserva la orientación del vector. Magnitudes en unidades (u) de una misma cantidad física.</p>
+    <details><summary>Cómo interpretar la construcción</summary><p>La longitud indica la magnitud y la punta indica el sentido. Trasladar un vector paralelamente conserva su magnitud y dirección. En una suma, R une el inicio con el final; si el recorrido se cierra, R es nulo.</p><p>Restar B equivale a sumar −B. El escalar k multiplica la magnitud por |k|; si k es negativo, invierte el sentido; si es cero, genera el vector nulo.</p><p>La dirección se mide desde el eje x positivo. Un vector nulo no tiene dirección definida. Las letras con flecha representan vectores; las letras sin flecha representan sus magnitudes.</p><p>Base: «Vectores — Conceptos extraídos de la Unidad 2», secciones 2–4. Las operaciones con escalares y demostraciones interactivas amplían didácticamente el documento.</p></details>
+  </section>
+</div>
+<style>
+#vector-lab {color:var(--foreground)}
+#vector-lab [hidden] {display:none!important}
+#vl-help {margin-bottom:20px}
+#vl-help li {margin-bottom:7px}
+#vector-lab math {font-family:"Cambria Math","STIX Two Math",math;font-size:1.1em}
+#vector-lab .vl-equation-menu {position:relative;margin:0;min-width:150px;font-weight:400}
+#vector-lab .vl-equation-menu summary {cursor:pointer;padding:8px 12px;background:var(--background);color:var(--foreground);border:1px solid var(--input);border-radius:6px;min-height:42px;box-sizing:border-box}
+#vector-lab .vl-equation-choices {position:absolute;top:100%;left:0;min-width:100%;max-height:280px;overflow:auto;z-index:30;padding:4px;background:var(--background);border:1px solid var(--border);border-radius:6px}
+#vector-lab .vl-equation-choices button {display:block;min-height:40px;white-space:nowrap;width:100%;text-align:left;padding:8px 12px;color:var(--foreground);background:var(--background);border:0;font:inherit;cursor:pointer}
+#vector-lab .vl-equation-choices button[aria-pressed=true] {background:var(--secondary);color:var(--secondary-foreground)}
+#vector-lab .vl-equation-choices button:hover {background:var(--accent);color:var(--accent-foreground)}
+#vector-lab .vl-svg-equation {display:flex;align-items:center;justify-content:center;white-space:nowrap;height:32px;font-size:12px;color:var(--foreground);gap:0}
+#vector-lab .vl-license {display:flex;align-items:center;gap:10px;font-size:12px}
+#vector-lab .vl-license img {flex-shrink:0}
+
+#vector-lab .vl-header {display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+#vector-lab .vl-header h2 {margin:0}
+#vector-lab .vl-options {margin-top:14px}
+#vector-lab #vl-controls {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px}
+#vector-lab .vl-vector {min-width:0}
+#vector-lab .vl-vector h3 {margin:0 0 8px;display:flex;gap:8px;align-items:center}
+#vector-lab .vl-swatch {display:inline-block;width:20px;height:4px}
+#vector-lab .vl-vector label {display:block}
+#vector-lab #vl-plot {width:100%;min-width:0}
+#vector-lab .vl-svg {display:block;width:100%;overflow:hidden}
+#vector-lab .vl-svg text {fill:var(--foreground)}
+#vector-lab #vl-result {margin-top:10px;font-weight:500}
+#vector-lab #vl-proof {margin-top:6px}
+#vector-lab details {margin-top:12px}
+@media(max-width:480px){#vector-lab #vl-controls {grid-template-columns:1fr}}
+</style>
+<script>
+(() => {
+const root=document.getElementById('vector-lab'), q=s=>root.querySelector(s);
+const vectors=[{m:6,a:20},{m:5,a:105},{m:4,a:220},{m:3,a:300}];
+let mode='par', order=[0,1], npoly=3, parop='sum', mask=0, scalar=false, ki=0, kval=2, property='none', group=0;
+const names=['A','B','C','D'], colors=names.map((_,i)=>`var(--viz-series-${i+1})`), rc='var(--viz-series-5)', sc='var(--viz-series-6)';
+const count=()=>mode==='pol'?npoly:2;
+const cw=()=>q('#vl-direction').value==='cw', norm=a=>((a%360)+360)%360;
+const reading=a=>cw()?(norm(a)<1e-9?0:norm(a)-360):norm(a);
+const mul=(v,k)=>[v[0]*k,v[1]*k];
+const dir=v=>Math.hypot(...v)<1e-9?'no definida':`${f(reading(Math.atan2(v[1],v[0])*180/Math.PI))}°`;
+const select=(id,label,opts,value)=>`<label class="form-label">${label}<select class="form-select" id="${id}">${opts.map(([v,t,disabled])=>`<option value="${v}" ${String(v)===String(value)?'selected':''} ${disabled?'disabled':''}>${t}</option>`).join('')}</select></label>`;
+const expr=(m,s)=>names.slice(0,count()).map((a,i)=>`${i?((m&(1<<(i-1)))?' − ':' + '):''}${s&&i===ki?'k·':''}${a}`).join('');
+const plus=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+const f=x=>(Math.abs(x)<0.0005?0:x).toLocaleString('es',{maximumFractionDigits:2,minimumFractionDigits:2});
+const perms=a=>a.length===1?[a]:a.flatMap((v,i)=>perms(a.filter((_,j)=>j!==i)).map(p=>[v,...p]));
+
+function equationContent(text){
+ const frag=document.createDocumentFragment(),pattern=/(?<![\p{L}\p{N}_])([ABCDRSV])(?![\p{L}\p{N}_])(?:⃗)?/gu;
+ let last=0;
+ for(const m of text.matchAll(pattern)){
+  frag.append(document.createTextNode(text.slice(last,m.index)));
+  const math=document.createElementNS('http://www.w3.org/1998/Math/MathML','math');
+  math.setAttribute('display','inline');
+  const magnitude=/Magnitud\s*$/i.test(text.slice(0,m.index));
+  math.setAttribute('aria-label',(magnitude?'magnitud ':'vector ')+m[1]);
+  const mi=document.createElementNS(math.namespaceURI,'mi');mi.textContent=m[1];
+  if(magnitude)math.append(mi);
+  else{
+   const over=document.createElementNS(math.namespaceURI,'mover');over.setAttribute('accent','true');
+   const arrow=document.createElementNS(math.namespaceURI,'mo');arrow.setAttribute('stretchy','true');arrow.textContent='→';
+   over.append(mi,arrow);math.append(over);
+  }
+  frag.append(math);last=m.index+m[0].length;
+ }
+ frag.append(document.createTextNode(text.slice(last)));return frag;
+}
+function installEquationMenus(){
+ root.querySelectorAll('select').forEach(select=>{
+  const hasVectors=[...select.options].some(o=>/(?<![\p{L}\p{N}_])[ABCDRSV](?![\p{L}\p{N}_])/u.test(o.textContent));
+  if(!hasVectors)return;
+  let menu=select.nextElementSibling;
+  if(menu?.classList.contains('vl-equation-menu'))menu.remove();
+  select.hidden=true;
+  menu=document.createElement('details');menu.className='vl-equation-menu';
+  const summary=document.createElement('summary');summary.id=select.id+'-equation';
+  summary.append(equationContent(select.selectedOptions[0]?.textContent||''));
+  const choices=document.createElement('div');choices.className='vl-equation-choices';
+  for(const option of select.options){
+   const button=document.createElement('button');button.type='button';button.disabled=option.disabled;
+   button.setAttribute('aria-pressed',String(option.selected));button.append(equationContent(option.textContent));
+   button.addEventListener('click',event=>{
+    event.preventDefault();event.stopPropagation();const id=select.id;
+    select.value=option.value;menu.open=false;
+    select.dispatchEvent(new Event('change',{bubbles:true}));
+    document.getElementById(id+'-equation')?.focus();
+   });choices.append(button);
+  }
+  menu.append(summary,choices);select.after(menu);
+  menu.addEventListener('keydown',event=>{
+   const buttons=[...choices.querySelectorAll('button:not(:disabled)')];
+   if(event.key==='Escape'){menu.open=false;summary.focus();event.preventDefault();}
+   if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+    event.preventDefault();menu.open=true;let index=buttons.indexOf(document.activeElement);
+    index=(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length;buttons[index]?.focus();
+   }
+  });
+ });
+}
+
+function applyVectorNotation(){
+ root.querySelectorAll('.vl-selected-equation').forEach(e=>e.remove());
+ installEquationMenus();
+ // Embed genuine MathML in the SVG labels through XHTML foreign objects.
+ root.querySelectorAll('svg text').forEach(label=>{
+  const text=label.textContent;if(!/(?<![\p{L}\p{N}_])[ABCDRSV](?![\p{L}\p{N}_])/u.test(text))return;
+  const box=label.getBBox(),width=Math.max(box.width+20,32),height=34;
+  const foreign=document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
+  foreign.setAttribute('x',box.x-10);foreign.setAttribute('y',Number(label.getAttribute('y'))-25);
+  foreign.setAttribute('width',width);foreign.setAttribute('height',height);
+  const line=document.createElementNS('http://www.w3.org/1999/xhtml','div');
+  line.className='vl-svg-equation';line.append(equationContent(text));foreign.append(line);label.replaceWith(foreign);
+ });
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){
+  if(node.parentElement.closest('script,style,svg,math,option,.vl-selected-equation,.vl-equation-menu'))continue;
+  if(/(?<![\p{L}\p{N}_])[ABCDRSV](?![\p{L}\p{N}_])/u.test(node.textContent))node.replaceWith(equationContent(node.textContent));
+ }
+}
+
+function updateHelp(){
+ const labels={par:'Paralelogramo: elige suma o resta y ajusta dos vectores.',tri:'Triángulo: compara la resta A − B con la del paralelogramo.',pol:'Polígono: elige el número de vectores, la operación y, en una suma simple, la propiedad.'};
+ q('#vl-help-current').textContent='Caso seleccionado — '+labels[mode];
+}
+q('#vl-help-button').addEventListener('click',()=>{
+ const open=q('#vl-help').hidden;q('#vl-help').hidden=!open;
+ q('#vl-help-button').setAttribute('aria-expanded',String(open));
+ q('#vl-help-button').textContent=open?'Ocultar instrucciones':'Cómo usar el simulador';
+ updateHelp();applyVectorNotation();
+});
+function configure(){
+ updateHelp();
+ const n=count();let html='';
+ if(order.length!==n)order=Array.from({length:n},(_,i)=>i);
+ if(ki>=n)ki=0;if(group>=n-1)group=0;
+ if(mode==='par')html=select('vl-op','Operación',[['sum','Suma: A + B'],['sub','Resta: A − B']],parop);
+ if(mode==='tri')html='<span>Operación: <strong>Resta A − B</strong></span>';
+ if(mode==='pol'){
+  html+=select('vl-count','Número de vectores',[[2,'2 vectores'],[3,'3 vectores'],[4,'4 vectores']],n);
+  const ops=[];for(let s=0;s<2;s++)for(let m=0;m<(1<<(n-1));m++)ops.push([`${m}:${s}`,expr(m,!!s)]);
+  html+=select('vl-op','Operación',ops,`${mask}:${scalar?1:0}`);
+  if(scalar){html+=select('vl-kvector','Vector multiplicado por k',names.slice(0,n).map((a,i)=>[i,a]),ki);html+=`<label class="form-label">Escalar k = <output id="vl-kval">${f(kval)}</output><input class="form-range" type="range" id="vl-k" min="-3" max="3" step="0.1" value="${kval}"></label>`;}
+  if(mask===0&&!scalar){
+   if(n===2&&property==='asoc')property='none';
+   html+=select('vl-property','Demostrar propiedad',[['none','Sin demostración'],['comm','Conmutativa'],['asoc',n===2?'Asociativa · requiere 3 o 4 vectores':'Asociativa',n===2]],property);
+   if(property==='comm')html+=select('vl-order','Orden de suma',perms(Array.from({length:n},(_,i)=>i)).map(p=>[p.join(','),p.map(i=>names[i]).join(' → ')]),order.join(','));
+   if(property==='asoc')html+=select('vl-group','Agrupar primero',Array.from({length:n-1},(_,i)=>[i,names.slice(0,n).map((a,j)=>`${j===i?'(':''}${a}${j===i+1?')':''}`).join(' + ')]),group);
+  }
+ }
+ q('#vl-options').innerHTML=html;
+ const target=q('#vl-target').value||'R';q('#vl-target').innerHTML=['R',...names.slice(0,n)].map(a=>`<option value="${a}">${a==='R'?'Resultante R':'Vector '+a}</option>`).join('');q('#vl-target').value=['R',...names.slice(0,n)].includes(target)?target:'R';
+ q('#vl-controls').innerHTML=vectors.slice(0,n).map((v,i)=>`<section class="vl-vector"><h3><span class="vl-swatch" style="background:${colors[i]}"></span>Vector ${names[i]}</h3><label class="form-label" for="vl-m${i}">Magnitud ${names[i]}: <output id="vl-mo${i}"></output> u</label><input class="form-range" id="vl-m${i}" data-i="${i}" data-key="m" type="range" min="0" max="20" step="0.1" value="${v.m}"><label class="form-label" for="vl-a${i}">Ángulo ${cw()?'horario':'antihorario'} desde +x: <output id="vl-ao${i}"></output>°</label><input class="form-range" id="vl-a${i}" data-i="${i}" data-key="a" type="range" min="${cw()?-360:0}" max="${cw()?0:360}" step="1" value="${reading(v.a)}"></section>`).join('');
+ draw();
+}
+function draw(){
+ const n=count(), vs=vectors.slice(0,n).map(v=>[v.m*Math.cos(v.a*Math.PI/180),v.m*Math.sin(v.a*Math.PI/180)]), tri=mode==='tri',sub=tri||(mode==='par'&&parop==='sub'),zero=[0,0];
+ const demo=mode==='pol'&&mask===0&&!scalar?property:'none';
+ const coeff=vs.map((_,i)=>mode==='pol'?((i>0&&(mask&(1<<(i-1))))?-1:1)*(scalar&&i===ki?kval:1):(sub&&i===1?-1:1)),terms=vs.map((v,i)=>mul(v,coeff[i]));
+ vs.forEach((v,i)=>{q(`#vl-mo${i}`).textContent=f(vectors[i].m);q(`#vl-ao${i}`).textContent=f(reading(vectors[i].a));});
+ if(q('#vl-kval'))q('#vl-kval').textContent=f(kval);
+ const R=terms.reduce(plus,zero),mag=Math.hypot(...R),angle=dir(R);
+ let expression=mode==='pol'?expr(mask,scalar):sub?'A − B':'A + B';
+ const segments=[],points=[zero], add=(a,b,label,color,dash=false,width=3)=>{segments.push({a,b,label,color,dash,width});points.push(a,b);};
+ let partial=null;
+ if(mode==='par'){
+  add(zero,terms[0],'A',colors[0]);add(zero,terms[1],sub?'−B':'B',colors[1]);add(terms[0],R,sub?'−B′':'B′',colors[1],true,2);add(terms[1],R,'A′',colors[0],true,2);
+  if(sub)add(zero,vs[1],'B original',colors[1],true,1);
+  q('#vl-guide').textContent=sub?'A − B = A + (−B): invierte B y construye el paralelogramo con A y −B. La diagonal es R.':'Origen común → paralelas → diagonal R = A + B.';
+ }else if(tri){
+  add(zero,vs[0],'A',colors[0]);add(zero,vs[1],'B',colors[1]);
+  q('#vl-guide').textContent='Resta A − B: coloca ambos vectores en el mismo origen y dibuja R desde la punta de B hasta la punta de A.';
+ }else{
+  let p=zero;const seq=demo==='comm'?order:vs.map((_,i)=>i);
+  seq.forEach(i=>{const end=plus(p,terms[i]);add(p,end,`${coeff[i]===1?'':coeff[i]===-1?'−':f(coeff[i])+'·'}${names[i]}`,colors[i]);p=end;});
+  if(demo==='asoc'){
+   const start=vs.slice(0,group).reduce(plus,zero);partial=plus(vs[group],vs[group+1]);
+   add(start,plus(start,partial),'S',sc,true,4);
+   expression=names.slice(0,n).map((a,j)=>`${j===group?'(':''}${a}${j===group+1?')':''}`).join(' + ');
+   q('#vl-guide').textContent=`S sustituye a ${names[group]} + ${names[group+1]}. Cambia el par agrupado: varía la suma parcial y se conserva R.`;
+  }else if(demo==='comm'){
+   expression=order.map(i=>names[i]).join(' + ');let b=zero;vs.forEach(v=>{const e=plus(b,v);add(b,e,'',sc,true,1.5);b=e;});
+   q('#vl-guide').textContent='Cambia el orden de suma. El recorrido discontinuo conserva el orden A, B, C…; ambos llegan al mismo punto final.';
+  }else q('#vl-guide').textContent='Une los términos cabeza-cola. El signo negativo invierte un vector; el escalar modifica su magnitud y, si es negativo, su sentido.';
+ }
+ add(tri?vs[1]:zero,tri?vs[0]:R,'R',rc,false,4);
+ // Include every subset sum so changing order or association preserves the scale.
+ if(!tri)for(let bits=0;bits<(1<<n);bits++){let p=zero;terms.forEach((v,i)=>{if(bits&(1<<i))p=plus(p,v);});points.push(p);}
+ const target=q('#vl-target').value,ti=names.indexOf(target),av=ti<0?R:vs[ti],abase=ti<0&&tri?vs[1]:zero;
+ points.push(abase,plus(abase,av));
+ const w=Math.max(280,q('#vl-plot').getBoundingClientRect().width),h=w<440?350:400,pad=74;
+ let xmin=Math.min(...points.map(p=>p[0])),xmax=Math.max(...points.map(p=>p[0])),ymin=Math.min(...points.map(p=>p[1])),ymax=Math.max(...points.map(p=>p[1]));
+ const scale=Math.min((w-2*pad)/Math.max(4,xmax-xmin),(h-2*pad)/Math.max(4,ymax-ymin));
+ const cx=(xmin+xmax)/2,cy=(ymin+ymax)/2,X=x=>w/2+(x-cx)*scale,Y=y=>h/2-(y-cy)*scale;
+ const xlo=cx-(w/2-16)/scale,xhi=cx+(w/2-16)/scale,ylo=cy-(h/2-16)/scale,yhi=cy+(h/2-16)/scale;
+ let out=`<title>${expression}: magnitud resultante ${f(mag)} unidades, dirección ${angle}</title><desc>Vectores y resultante R. ${q('#vl-guide').textContent} Arco angular de ${target} desde +x.</desc><defs>`;
+ [...colors,rc,sc,'var(--foreground)'].forEach((c,i)=>out+=`<marker id="vl-arrow${i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="${c}"/></marker>`);out+='</defs>';
+ const steps=[0.5,1,2,5,10,20,50],step=steps.find(s=>s*scale>=55)||50;
+ for(let x=Math.ceil(xlo/step)*step;x<=xhi;x+=step)out+=`<line x1="${X(x)}" y1="16" x2="${X(x)}" y2="${h-16}" stroke="var(--border)"/><text x="${X(x)}" y="${h-3}" text-anchor="middle" class="text-small">${Math.round(x*10)/10}</text>`;
+ for(let y=Math.ceil(ylo/step)*step;y<=yhi;y+=step)out+=`<line x1="16" y1="${Y(y)}" x2="${w-16}" y2="${Y(y)}" stroke="var(--border)"/><text x="3" y="${Y(y)-3}" class="text-small">${Math.round(y*10)/10}</text>`;
+ out+=`<line x1="16" y1="${Y(0)}" x2="${w-16}" y2="${Y(0)}" stroke="var(--foreground)" opacity=".5"/><line x1="${X(0)}" y1="16" x2="${X(0)}" y2="${h-16}" stroke="var(--foreground)" opacity=".5"/><text x="${w-18}" y="${Y(0)-8}" text-anchor="end" class="text-small">x (u)</text><text x="${X(0)+8}" y="16" class="text-small">y (u)</text>`;
+ const labels=[];
+ segments.forEach((s,k)=>{
+  const x1=X(s.a[0]),y1=Y(s.a[1]),x2=X(s.b[0]),y2=Y(s.b[1]),len=Math.hypot(x2-x1,y2-y1),idx=[...colors,rc,sc].indexOf(s.color);
+  if(len<0.001)return;
+  out+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${s.color}" stroke-width="${s.width}" ${s.dash?'stroke-dasharray="7 5"':''} marker-end="url(#vl-arrow${idx})"/>`;
+  if(!s.label)return;
+  const label=w<440?s.label.replace(' trasladado','′'):s.label;
+  let tx=(x1+x2)/2+(y2-y1)/len*14,ty=(y1+y2)/2-(x2-x1)/len*14;
+  const lw=label.length*7.5;tx=Math.max(lw/2+8,Math.min(w-lw/2-8,tx));ty=Math.max(32,Math.min(h-28,ty));
+  for(let tries=0;tries<8&&labels.some(t=>Math.abs(t.x-tx)<(t.w+lw)/2+4&&Math.abs(t.y-ty)<18);tries++)ty=Math.min(h-25,ty+19);
+  labels.push({x:tx,y:ty,w:lw});out+=`<text x="${tx}" y="${ty}" text-anchor="middle" class="text-small" style="paint-order:stroke;stroke:var(--background);stroke-width:4px;stroke-linejoin:round">${label}</text>`;
+ });
+ out+=`<circle cx="${X(0)}" cy="${Y(0)}" r="3" fill="var(--foreground)"/>`;
+ if(Math.hypot(...av)>1e-9){
+  const a=reading(Math.atan2(av[1],av[0])*180/Math.PI),rad=a*Math.PI/180,r=29,bx=X(abase[0]),by=Y(abase[1]);
+  out+=`<line x1="${bx}" y1="${by}" x2="${bx+51}" y2="${by}" stroke="var(--foreground)" stroke-dasharray="3 3"/><text x="${bx+53}" y="${by-5}" class="text-small">+x</text><line x1="${bx}" y1="${by}" x2="${bx+47*Math.cos(rad)}" y2="${by-47*Math.sin(rad)}" stroke="var(--foreground)" stroke-dasharray="2 4"/>`;
+  if(Math.abs(a)>0.001){let d='';const steps=Math.max(2,Math.ceil(Math.abs(a)/5));for(let j=0;j<=steps;j++){const t=rad*j/steps;d+=`${j?' L':'M'}${bx+r*Math.cos(t)},${by-r*Math.sin(t)}`;}out+=`<path d="${d}" stroke="var(--foreground)" stroke-width="1.5" fill="none" marker-end="url(#vl-arrow6)"/>`;}
+ }
+ if(mag<1e-9)out+=`<circle cx="${X(tri?vs[0][0]:0)}" cy="${Y(tri?vs[0][1]:0)}" r="7" stroke="${rc}" stroke-width="3" fill="none"/><text x="${w/2}" y="32" text-anchor="middle">R = 0 · dirección no definida</text>`;
+ const svg=q('svg');svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('height',h);svg.innerHTML=out;
+ q('#vl-angle-reading').textContent=`Arco de ${target}: ${dir(av)} desde +x · ${cw()?'a favor':'en contra'} de las manecillas del reloj${tri&&target==='R'?' · referencia paralela a +x en la punta de B':''}.`;
+ q('#vl-result').textContent=`R = ${expression}${scalar&&mode==='pol'?' (k = '+f(kval)+')':''} · Magnitud R = ${f(mag)} u · dirección = ${angle}`;
+ let proof='';
+ if(sub)proof+='La resta no es conmutativa: B − A tiene sentido opuesto a A − B; si A = B, ambas diferencias son nulas.';
+ if(demo==='asoc')proof+=`S = ${names[group]} + ${names[group+1]}; Magnitud S = ${f(Math.hypot(...partial))} u; dirección de S = ${dir(partial)}. Cambia la agrupación, se conserva R.`;
+ if(demo==='comm')proof+=`Conmutatividad: ${names.slice(0,n).join(' + ')} = ${order.map(i=>names[i]).join(' + ')}. Todo orden llega al mismo punto.`;
+ if(scalar&&mode==='pol')proof+=`k·${names[ki]}: magnitud ${f(Math.abs(kval)*vectors[ki].m)} u; dirección ${dir(mul(vs[ki],kval))}.`;
+ q('#vl-proof').textContent=proof;
+ applyVectorNotation();
+}
+root.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;q('#vl-panel').setAttribute('aria-labelledby',b.id);configure();}));
+q('#vl-options').addEventListener('change',e=>{
+ const id=e.target.id,val=e.target.value;
+ if(id==='vl-count'){npoly=+val;mask=0;scalar=false;}
+ if(id==='vl-op'){if(mode==='par')parop=val;else{const p=val.split(':');mask=+p[0];scalar=p[1]==='1';}}
+ if(id==='vl-property')property=val;if(id==='vl-order')order=val.split(',').map(Number);if(id==='vl-group')group=+val;if(id==='vl-kvector')ki=+val;
+ if(id==='vl-k'){kval=+val;draw();return;}configure();
+});
+q('#vl-options').addEventListener('input',e=>{if(e.target.id==='vl-k'){kval=+e.target.value;draw();}});
+q('#vl-direction').addEventListener('change',configure);q('#vl-target').addEventListener('change',draw);
+q('#vl-controls').addEventListener('input',e=>{if(!e.target.dataset.key)return;vectors[+e.target.dataset.i][e.target.dataset.key]=+e.target.value;draw();});
+configure();new ResizeObserver(()=>draw()).observe(q('#vl-plot'));
+})();
+</script>
+
+
+
+<script>
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) => {
+    lastPointerWasTouch =
+      event.type === "pointerdown" && event.pointerType === "touch";
+  };
+  const handleTouchClick = (event) => {
+    const isTouch = event.pointerType === "touch" || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch && activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() => {
+      if (activeTrigger === trigger && !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) => {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerdown", handlePointer);
+    document.removeEventListener("pointercancel", handlePointer);
+    document.removeEventListener("click", handleTouchClick);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerdown", handlePointer);
+  document.addEventListener("pointercancel", handlePointer);
+  document.addEventListener("click", handleTouchClick);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-tabs">
+(() => {
+  const selector = '.nav[role="tablist"] [role="tab"]';
+  const disabled = ':disabled,[aria-disabled="true"]';
+  const selectTab = (selected) => {
+    const panelId = selected.getAttribute("aria-controls");
+    for (const tab of selected.closest('[role="tablist"]').querySelectorAll('[role="tab"]')) {
+      const active = tab === selected;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-selected", String(active));
+      const id = tab.getAttribute("aria-controls");
+      const panel = id && document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden && selected.id) {
+          panel.setAttribute("aria-labelledby", selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) => {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === "click") {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest('[role="tablist"]').querySelectorAll('[role="tab"]'),
+    ).filter((candidate) => !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === "Home") {
+      next = 0;
+    } else if (event.key === "End") {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    tabs[next].click();
+  };
+
+  for (const list of document.querySelectorAll('.nav[role="tablist"]')) {
+    const selected =
+      list.querySelector('[role="tab"][aria-selected="true"]') ??
+      list.querySelector('[role="tab"].active') ??
+      list.querySelector('[role="tab"]');
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener("click", interact);
+  document.addEventListener("keydown", interact);
+  window.addEventListener("pagehide", () => {
+    document.removeEventListener("click", interact);
+    document.removeEventListener("keydown", interact);
+  }, { once: true });
+})();
+</script>
+
+<script>
+(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+
+</body>
+</html>
